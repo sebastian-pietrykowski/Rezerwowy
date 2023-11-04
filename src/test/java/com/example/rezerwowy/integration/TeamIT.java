@@ -7,13 +7,17 @@ import com.example.rezerwowy.models.Team;
 import com.example.rezerwowy.repositories.PersonRepository;
 import com.example.rezerwowy.repositories.RoleRepository;
 import com.example.rezerwowy.repositories.TeamRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
@@ -122,49 +126,42 @@ class TeamIT {
         Team team = Team.builder()
                 .name("FC Barcelona")
                 .abbreviation("FCB")
-                //.teamMembers(new HashSet<>())
                 .build();
         Team savedTeam = teamRepository.save(team);
 
         Role role = Role.builder()
                 .name("Striker")
-                //.roleOwners(new HashSet<>())
                 .build();
-        roleRepository.save(role);
+        Role savedRole = roleRepository.save(role);
 
         Person person = Person.builder()
                 .name("Lionel")
                 .surname("Messi")
-                .team(team)
-                .role(role)
+                .team(savedTeam)
+                .role(savedRole)
                 .build();
-        personRepository.save(person);
-        //team.getTeamMembers().add(person);
-        //eamRepository.save(team);
-
-        System.out.println(teamRepository.findById(savedTeam.getId()).orElseThrow().getTeamMembers().size());
-
-/*        Team savedTeam = teamRepository.save(team);
-        person.setTeam(savedTeam);
-        savedTeam.getTeamMembers().add(person);
-        personRepository.save(person);
-        teamRepository.save(savedTeam);
-        System.out.println(savedTeam.getTeamMembers().size());
-        System.out.println(teamRepository.findById(savedTeam.getId()).orElseThrow().getName());*/
-        //savedTeam = teamRepository.save(savedTeam);
-        //personRepository.save(person);
+        Person person2 = Person.builder()
+                .name("Luis")
+                .surname("Suarez")
+                .team(savedTeam)
+                .role(savedRole)
+                .build();
+        Person savedPerson = personRepository.save(person);
+        Person savedPerson2 = personRepository.save(person2);
 
         //when
         ResponseEntity<TeamDto> getResponse = restTemplate.getForEntity("/teams/" + savedTeam.getId(), TeamDto.class);
 
         //then
-/*        Assertions.assertAll(
+        Assertions.assertAll(
                 () -> assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK),
                 () -> assertThat(getResponse.getBody().id()).isNotNull(),
                 () -> assertThat(getResponse.getBody().name()).isEqualTo(savedTeam.getName()),
                 () -> assertThat(getResponse.getBody().abbreviation()).isEqualTo(savedTeam.getAbbreviation()),
-                () -> assertThat(getResponse.getBody().teamMembersIds().size()).isEqualTo(savedTeam.getTeamMembers().size())
-        );*/
+                () -> assertThat(getResponse.getBody().teamMembersIds().size()).isEqualTo(2),
+                () -> assertThat(getResponse.getBody().teamMembersIds().contains(savedPerson.getId())).isEqualTo(true),
+                () -> assertThat(getResponse.getBody().teamMembersIds().contains(savedPerson2.getId())).isEqualTo(true)
+        );
     }
 
 /*

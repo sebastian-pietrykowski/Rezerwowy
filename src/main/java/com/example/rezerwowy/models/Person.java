@@ -45,11 +45,11 @@ public class Person {
     @Pattern(regexp = REGEX_FOR_NAMES, message = NAMES_CHARS_VALIDATION_MESSAGE)
     private String surname;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 }
