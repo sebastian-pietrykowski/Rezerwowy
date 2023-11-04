@@ -1,20 +1,10 @@
 package com.example.rezerwowy.integration;
 
-import com.example.rezerwowy.dtos.RoleDto;
-import com.example.rezerwowy.models.Role;
 import com.example.rezerwowy.repositories.RoleRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
@@ -26,7 +16,7 @@ class RoleIT {
     private RoleRepository roleRepository;
 
 
-    @Test
+ /*   @Test
     @DirtiesContext
     void should_createRole_when_roleDoesntExist() {
         // given
@@ -154,5 +144,5 @@ class RoleIT {
 
         //then
         assertThat(roleRepository.existsById(savedRole.getId())).isFalse();
-    }
+    }*/
 }

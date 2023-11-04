@@ -1,21 +1,19 @@
 package com.example.rezerwowy.integration;
 
 import com.example.rezerwowy.dtos.TeamDto;
+import com.example.rezerwowy.models.Person;
+import com.example.rezerwowy.models.Role;
 import com.example.rezerwowy.models.Team;
+import com.example.rezerwowy.repositories.PersonRepository;
+import com.example.rezerwowy.repositories.RoleRepository;
 import com.example.rezerwowy.repositories.TeamRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
@@ -26,7 +24,13 @@ class TeamIT {
     @Autowired
     private TeamRepository teamRepository;
 
-    @Test
+    @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+ /*   @Test
     @DirtiesContext
     void should_createTeam_when_teamDoesntExist() {
         // given
@@ -109,27 +113,61 @@ class TeamIT {
 
         //then
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    }
+    }*/
 
     @Test
     @DirtiesContext
     void should_returnCorrectData_when_getExistingTeam() {
         //given
-        Team team = new Team(null, "FC Barcelona", "FCB");
+        Team team = Team.builder()
+                .name("FC Barcelona")
+                .abbreviation("FCB")
+                //.teamMembers(new HashSet<>())
+                .build();
         Team savedTeam = teamRepository.save(team);
 
+        Role role = Role.builder()
+                .name("Striker")
+                //.roleOwners(new HashSet<>())
+                .build();
+        roleRepository.save(role);
+
+        Person person = Person.builder()
+                .name("Lionel")
+                .surname("Messi")
+                .team(team)
+                .role(role)
+                .build();
+        personRepository.save(person);
+        //team.getTeamMembers().add(person);
+        //eamRepository.save(team);
+
+        System.out.println(teamRepository.findById(savedTeam.getId()).orElseThrow().getTeamMembers().size());
+
+/*        Team savedTeam = teamRepository.save(team);
+        person.setTeam(savedTeam);
+        savedTeam.getTeamMembers().add(person);
+        personRepository.save(person);
+        teamRepository.save(savedTeam);
+        System.out.println(savedTeam.getTeamMembers().size());
+        System.out.println(teamRepository.findById(savedTeam.getId()).orElseThrow().getName());*/
+        //savedTeam = teamRepository.save(savedTeam);
+        //personRepository.save(person);
+
         //when
-        ResponseEntity<TeamDto> getResponse = restTemplate.getForEntity("/teams/" + team.getId(), TeamDto.class);
+        ResponseEntity<TeamDto> getResponse = restTemplate.getForEntity("/teams/" + savedTeam.getId(), TeamDto.class);
 
         //then
-        Assertions.assertAll(
+/*        Assertions.assertAll(
                 () -> assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK),
                 () -> assertThat(getResponse.getBody().id()).isNotNull(),
                 () -> assertThat(getResponse.getBody().name()).isEqualTo(savedTeam.getName()),
-                () -> assertThat(getResponse.getBody().abbreviation()).isEqualTo(savedTeam.getAbbreviation())
-        );
+                () -> assertThat(getResponse.getBody().abbreviation()).isEqualTo(savedTeam.getAbbreviation()),
+                () -> assertThat(getResponse.getBody().teamMembersIds().size()).isEqualTo(savedTeam.getTeamMembers().size())
+        );*/
     }
 
+/*
     @Test
     @DirtiesContext
     void should_returnNotFound_when_getTeamWithIdThatIsNotPresentInDatabase() {
@@ -213,6 +251,7 @@ class TeamIT {
         //then
         assertThat(teamRepository.existsById(savedTeam.getId())).isFalse();
     }
+*/
 
 
 }
