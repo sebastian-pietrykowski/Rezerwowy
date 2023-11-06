@@ -3,7 +3,6 @@ package com.example.rezerwowy.controllers;
 import com.example.rezerwowy.dtos.PersonDTO;
 import com.example.rezerwowy.mappers.PersonMapper;
 import com.example.rezerwowy.models.Person;
-import com.example.rezerwowy.models.Team;
 import com.example.rezerwowy.services.PersonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,7 @@ public class PersonController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePersonById(@PathVariable("id") Long personId) {
-        personService.deletePaymentById(personId);
+        personService.deletePersonById(personId);
         return ResponseEntity.ok().build();
     }
 }

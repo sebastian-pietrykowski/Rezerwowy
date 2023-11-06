@@ -4,10 +4,10 @@ import com.example.rezerwowy.exceptions.DuplicatePersonIdException;
 import com.example.rezerwowy.exceptions.PersonNotFoundException;
 import com.example.rezerwowy.models.Person;
 import com.example.rezerwowy.repositories.PersonRepository;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,14 +22,14 @@ public class PersonService {
         return personRepository.save(person);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Person getPersonById(Long personId) {
         return personRepository.findById(personId)
                 .orElseThrow(() -> new PersonNotFoundException(personId));
     }
 
     @Transactional
-    public void deletePaymentById(Long personId) {
+    public void deletePersonById(Long personId) {
         if (!personRepository.existsById(personId))
             throw new PersonNotFoundException(personId);
         personRepository.deleteById(personId);

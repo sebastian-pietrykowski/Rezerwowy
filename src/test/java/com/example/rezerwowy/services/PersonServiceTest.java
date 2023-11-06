@@ -60,7 +60,7 @@ public class PersonServiceTest {
         Mockito.when(personRepository.existsById(id)).thenReturn(true);
 
         // when
-        personService.deletePaymentById(id);
+        personService.deletePersonById(id);
 
         // then
         Mockito.verify(personRepository).deleteById(id);

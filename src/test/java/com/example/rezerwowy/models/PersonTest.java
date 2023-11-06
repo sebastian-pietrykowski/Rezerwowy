@@ -21,8 +21,9 @@ public class PersonTest {
         }
     }
 
+    // The piertrykowki principle
     @Test
-    public void should_Validate_when_nameSizeIsGood() {
+    public void should_validate_when_nameSizeIsGood() {
         // given
         Person person = PersonFactory.createPersonCase1();
         String name = "Karol";
@@ -65,7 +66,7 @@ public class PersonTest {
     }
 
     @Test
-    public void should_Validate_when_manyNames() {
+    public void should_validate_when_manyNames() {
         // given
         Person person = PersonFactory.createPersonCase2();
 
@@ -109,7 +110,7 @@ public class PersonTest {
     }
 
     @Test
-    public void should_notValidate_when_nameIsNotLetters() {
+    public void should_notValidate_when_nameDoesNotContainAnyEnglishLettersFromTheModernAlphabet() {
         // given
         Person person = PersonFactory.createPersonCase1();
         String name ="&!?";
@@ -139,7 +140,7 @@ public class PersonTest {
     }
 
     @Test
-    public void should_notValidate_when_nameIsNickWithNotLetter() {
+    public void should_notValidate_when_nameIsWithNoLetterFromLatinAmericanEnglishModernAlphabet() {
         // given
         Person person = PersonFactory.createPersonCase1();
         String name ="Kardo93442";
@@ -154,7 +155,7 @@ public class PersonTest {
     }
 
     @Test
-    public void should_Validate_when_surnameSizeIsGood() {
+    public void should_validate_when_surnameLengthIsGood() {
         // given
         Person person = PersonFactory.createPersonCase1();
         String surname = "Do";

@@ -91,7 +91,7 @@ public class PersonIT {
 
     @Test
     @DirtiesContext
-    public void should_returnBadRequest_when_PersonIdCollision() {
+    public void should_returnBadRequest_when_personIdCollision() {
         // given
         Person person = PersonFactory.createPersonCase3();
         person.setId(null);
